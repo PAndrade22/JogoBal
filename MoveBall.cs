@@ -1,4 +1,3 @@
-o# JogoBal
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +6,12 @@ public class MoveBall : MonoBehaviour {
 
 private Rigidbody rb;
 
+public Vector3 jump;
+
+public float jumpforce = 2;
+
+public bool isGrounded;
+
 public Text winText;
 
 public float velocidade;
@@ -14,7 +19,6 @@ public float velocidade;
 private int count = 0;
 
 public Text countText;
-
 
 
 void OnTriggerEnter(Collider other) {
@@ -33,14 +37,27 @@ if (count >= 5){
 }
 
 
+
 void Start () {
     rb = GetComponent<Rigidbody>();
     SetCountText();
+    jump = new Vector3(0.0f, 2.0f, 0.0f);
 }
+
+void OnCollisionStay(){
+    isGrounded = true;
+}
+
 void Update () {
 float movimentoHorizontal = Input.GetAxis("Horizontal");
 float movimentoVertical = Input.GetAxis("Vertical");
 Vector3 movimento = new Vector3(movimentoHorizontal, 0.0f, movimentoVertical);
 rb.AddForce(movimento * velocidade);
+
+ if(Input.GetKeyDown(KeyCode.Space) && isGrounded){
+        rb.AddForce(jump * jumpforce, ForceMode.Impulse);
+        isGrounded = false;
+
+}
 }
 }
